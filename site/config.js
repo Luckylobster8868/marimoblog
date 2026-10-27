@@ -1,1 +1,1 @@
-window.NX_API="PASTE-YOUR-WORKER-URL-HERE";
+window.NX_API="https://marimoblog-api.mukeshfiroda24.workers.dev";
