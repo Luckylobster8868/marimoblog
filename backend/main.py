@@ -1,6 +1,7 @@
 # marimoblog backend: serves the page and the /api it talks to.
 # Anime data comes from AniList, articles/comments/poll live in a small sqlite file (nexus.db).
 # Run:  python main.py   then open http://localhost:8000
+import threading
 import asyncio, copy, json, os, re, secrets, sqlite3, time, urllib.request
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
@@ -388,6 +389,7 @@ _NDB, _NSRC = os.path.join(_DIR, "nexus_news.db"), os.path.join(_DIR, "sources.j
 _UA = "marimoblog/1.0 (anime news reader; every item links back to its original source)"
 _ITUNES = "https://itunes.apple.com/search"
 _NS = {"started": False, "last": 0.0, "busy": False, "ready": False}
+_DBI_INIT_LOCK = threading.Lock()
 
 _DEFAULT = [
     {"key": "ann", "name": "Anime News Network", "kind": "news", "home": "https://www.animenewsnetwork.com", "feeds": ["https://www.animenewsnetwork.com/all/rss.xml"]},
@@ -453,19 +455,41 @@ def _sources():
             _SRC["mt"] = None
     return _SRC["data"]
 
+
 def _dbi():
     c = sqlite3.connect(_NDB, timeout=30)
     c.row_factory = sqlite3.Row
-    if not _NS["ready"]:
-        c.execute("PRAGMA journal_mode=WAL")
-        c.executescript("""
-            CREATE TABLE IF NOT EXISTS items(id TEXT PRIMARY KEY, source TEXT, kind TEXT, title TEXT, excerpt TEXT, link TEXT, image TEXT, audio TEXT, published INTEGER, added INTEGER);
-            CREATE INDEX IF NOT EXISTS ix_items_pub ON items(published DESC);
-            CREATE INDEX IF NOT EXISTS ix_items_src ON items(source, published DESC);
-            CREATE TABLE IF NOT EXISTS srcs(key TEXT PRIMARY KEY, feed TEXT, etag TEXT, modified TEXT, checked INTEGER DEFAULT 0, error TEXT DEFAULT '', backfilled INTEGER DEFAULT 0, title TEXT DEFAULT '', home TEXT DEFAULT '', art TEXT DEFAULT '');
-        """)
-        _NS["ready"] = True
-    return c
+
+    try:
+        if not _NS["ready"]:
+            with _DBI_INIT_LOCK:
+                if not _NS["ready"]:
+                    c.execute("PRAGMA journal_mode=WAL")
+                    c.executescript("""
+                        CREATE TABLE IF NOT EXISTS items(
+                            id TEXT PRIMARY KEY, source TEXT, kind TEXT,
+                            title TEXT, excerpt TEXT, link TEXT, image TEXT,
+                            audio TEXT, published INTEGER, added INTEGER
+                        );
+                        CREATE INDEX IF NOT EXISTS ix_items_pub
+                            ON items(published DESC);
+                        CREATE INDEX IF NOT EXISTS ix_items_src
+                            ON items(source, published DESC);
+                        CREATE TABLE IF NOT EXISTS srcs(
+                            key TEXT PRIMARY KEY, feed TEXT, etag TEXT,
+                            modified TEXT, checked INTEGER DEFAULT 0,
+                            error TEXT DEFAULT '', backfilled INTEGER DEFAULT 0,
+                            title TEXT DEFAULT '', home TEXT DEFAULT '',
+                            art TEXT DEFAULT ''
+                        );
+                    """)
+                    _NS["ready"] = True
+
+        return c
+    except Exception:
+        c.close()
+        raise
+
 
 def _get(url, etag=None, modified=None, limit=4000000):
     if not url.startswith(("http://", "https://")):
