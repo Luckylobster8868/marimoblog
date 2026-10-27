@@ -1,0 +1,69 @@
+MARIMOBLOG: FREE, NO SERVER   (about 25 minutes, no card needed)
+Do this on a laptop or PC browser (phones can't drag in folders).
+
+WHAT RUNS WHERE
+- GitHub Pages: your website, plus static copies of the news, anime lists, articles, comments and poll.
+  A free GitHub job rebuilds them about every 15 minutes.
+- Visitors' browsers: ask AniList directly for anime pages.
+- Cloudflare Worker + D1 database: only comments, votes, publishing, and live comments on article pages.
+
+BEFORE YOU START
+1. Unzip marimoblog-free.zip (right-click, Extract All). You should see: .github, backend, scripts, site, worker, SETUP.txt
+2. Pick a password for publishing (your ADMIN_KEY) and write it down. You use it in Part 2 and on the admin page.
+
+PART 1: GITHUB (website + auto-updates)
+1. Go to github.com, sign up (free), verify your email.
+2. Click + (top right) -> New repository. Name: marimoblog. Choose Public. Leave the rest. Click Create repository.
+3. On the empty repository page click "uploading an existing file".
+4. Open the unzipped folder, select everything inside it (.github, backend, scripts, site, worker, SETUP.txt) and drag it
+   all into the GitHub page. Wait until every file is listed. (Not the zip itself, not the outer folder.)
+   If .github is missing from the list: Add file -> Create new file, type  .github/workflows/update.yml  as the name
+   (typing the slashes creates the folders), paste the whole text of that file, commit.
+5. Scroll down and click Commit changes (keep "Commit directly to the main branch").
+6. Click Settings (repo tab) -> Pages (left side) -> under Build and deployment set Source to GitHub Actions.
+7. Click the Actions tab. If the first run (started by your upload) shows a red X, that is normal: Pages was not on yet.
+   Click update-site (left side) -> Run workflow -> Run workflow (green). Wait about 2 minutes for a green check.
+8. Your site is at https://YOURUSERNAME.github.io/marimoblog/  (your GitHub username, lowercase). Open it.
+   Comments and votes will not work yet. That is Parts 2 and 3.
+
+PART 2: CLOUDFLARE (comments, votes, publishing)
+1. Go to dash.cloudflare.com and sign up (free). Verify your email.
+2. Left menu: Storage & Databases -> D1 SQL database -> Create database. Name: marimoblog. Create.
+3. Open marimoblog -> Console tab. Open worker/schema.sql from the unzipped folder in Notepad, copy ALL of it, paste it into the
+   Console box, click Execute. It should run without red errors.
+4. Left menu: Workers & Pages -> Create application -> Start with Hello World! -> Get started.
+   Name: marimoblog-api. Click Deploy. (If it asks for a workers.dev name, pick anything.)
+5. Click Edit code. Click inside the code editor, press Ctrl+A, then paste ALL of worker/worker.js. Click Deploy.
+6. Connect the database: open the Worker -> Bindings (a tab, or Settings -> Bindings) -> Add binding -> D1 database.
+   Variable name: DB (capital letters). Database: marimoblog. Add / Deploy.
+7. Add the password: Settings -> Variables and Secrets -> Add. Type: Secret. Name: ADMIN_KEY. Value: your password. Deploy.
+8. Copy the Worker address from the Worker's page. It looks like https://marimoblog-api.YOURNAME.workers.dev
+9. Test it: open that address followed by /api/poll in a new tab, for example
+   https://marimoblog-api.YOURNAME.workers.dev/api/poll
+   You should see three poll options with votes 0. If you see "server error", redo steps 3 and 6.
+
+PART 3: CONNECT THEM
+1. GitHub -> your repo -> site folder -> config.js -> pencil icon (Edit). Replace PASTE-YOUR-WORKER-URL-HERE with your Worker
+   address (keep the quotes, no slash at the end). Click Commit changes.
+2. Wait about 2 minutes (the Actions tab shows a green check), open your site and hard refresh (Ctrl+Shift+R).
+3. Test: the home page shows news; open an anime page; open an article, post a comment, refresh; vote in the poll.
+4. Publish: open https://YOURUSERNAME.github.io/marimoblog/admin.html, type your ADMIN_KEY, write an article, Publish.
+   Readers see it within 15 to 30 minutes. To show it right now: Actions -> update-site -> Run workflow.
+
+IF SOMETHING GOES WRONG
+- Red X on Actions: click it and read the failed step. "Get Pages site failed" means Part 1 step 6 was skipped.
+- Site is empty or shows sample content: the first run has not finished. Wait, then Ctrl+Shift+R.
+- Comments or votes fail: redo Part 2 step 9, and check config.js has the exact Worker address.
+- "wrong or missing admin key": add the ADMIN_KEY secret again (Cloudflare never shows it twice).
+- Anime pages empty: tell Claude (AniList may be limiting your connection).
+
+LATER
+- Add a news site: GitHub -> backend/sources.json -> pencil -> add a line like the others -> Commit.
+- GitHub's schedule is not exact: news can be 15 to 30 minutes behind. If it stops after about 2 months with no activity
+  in the repo, open Actions and click Enable.
+- Your .xyz domain: repo Settings -> Pages -> Custom domain (HTTPS is free). Ask Claude for the exact DNS records.
+
+FREE LIMITS
+- Cloudflare Worker: 100,000 requests a day. A visit costs about 0 to 2 of them. If it runs out, posting, voting and live
+  comments pause until the next day. The rest of the site keeps working.
+- GitHub Pages: about 100 GB of traffic a month (soft limit).

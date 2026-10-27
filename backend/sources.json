@@ -1,0 +1,102 @@
+[
+ {
+  "key": "ann",
+  "name": "Anime News Network",
+  "kind": "news",
+  "home": "https://www.animenewsnetwork.com",
+  "feeds": [
+   "https://www.animenewsnetwork.com/all/rss.xml"
+  ]
+ },
+ {
+  "key": "mal",
+  "name": "MyAnimeList News",
+  "kind": "news",
+  "home": "https://myanimelist.net/news",
+  "feeds": [
+   "https://myanimelist.net/rss/news.xml"
+  ]
+ },
+ {
+  "key": "crunchyroll",
+  "name": "Crunchyroll News",
+  "kind": "news",
+  "home": "https://www.crunchyroll.com/news",
+  "feeds": [
+   "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/en-US/rss"
+  ]
+ },
+ {
+  "key": "animecorner",
+  "name": "Anime Corner",
+  "kind": "news",
+  "home": "https://animecorner.me",
+  "backfill": "wp"
+ },
+ {
+  "key": "glorio",
+  "name": "The Glorio Blog",
+  "kind": "blog",
+  "home": "https://theglorioblog.com",
+  "backfill": "wp"
+ },
+ {
+  "key": "animefeminist",
+  "name": "Anime Feminist",
+  "kind": "blog",
+  "home": "https://www.animefeminist.com",
+  "backfill": "wp"
+ },
+ {
+  "key": "tangles",
+  "name": "Beneath the Tangles",
+  "kind": "blog",
+  "home": "https://beneaththetangles.com",
+  "backfill": "wp"
+ },
+ {
+  "key": "starcrossed",
+  "name": "Star Crossed Anime",
+  "kind": "blog",
+  "home": "https://starcrossedanime.com",
+  "backfill": "wp"
+ },
+ {
+  "key": "glorio-chat",
+  "name": "The GLORIO Chat Podcast",
+  "kind": "podcast",
+  "home": "https://theglorioblog.com",
+  "itunes": "GLORIO Chat Podcast"
+ },
+ {
+  "key": "anncast",
+  "name": "ANNCast",
+  "kind": "podcast",
+  "home": "https://www.animenewsnetwork.com",
+  "itunes": "ANNCast Anime News Network"
+ },
+ {
+  "key": "yt-ann",
+  "name": "Anime News Network (YouTube)",
+  "kind": "video",
+  "home": "https://www.youtube.com/@AnimeNewsNetwork"
+ },
+ {
+  "key": "yt-crunchyroll",
+  "name": "Crunchyroll (YouTube)",
+  "kind": "video",
+  "home": "https://www.youtube.com/@Crunchyroll"
+ },
+ {
+  "key": "yt-gigguk",
+  "name": "Gigguk (YouTube)",
+  "kind": "video",
+  "home": "https://www.youtube.com/@Gigguk"
+ },
+ {
+  "key": "yt-sew",
+  "name": "Super Eyepatch Wolf (YouTube)",
+  "kind": "video",
+  "home": "https://www.youtube.com/@SuperEyepatchWolf"
+ }
+]

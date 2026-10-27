@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin - marimoblog</title>
+<link rel="icon" href="data:,">
+<style>
+:root{--bg:#14161a;--card:#1e2126;--fg:#f2efe9;--dim:#9aa2ac;--accent:#6fa892;--line:rgba(242,239,233,.1)}
+*{box-sizing:border-box}
+body{margin:0;padding:24px 16px;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,sans-serif}
+main{max-width:640px;margin:0 auto}
+h1{font-size:22px}h2{font-size:17px;margin-top:32px}
+label{display:block;margin:12px 0 4px;color:var(--dim);font-size:14px}
+input,select,textarea,button{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:inherit}
+textarea{min-height:200px}
+button{background:var(--accent);color:#13201a;border:0;font-weight:600;margin-top:16px;cursor:pointer}
+.row{display:flex;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row span{flex:1}
+.row button{width:auto;margin:0;background:none;color:#e88;border:1px solid var(--line);padding:6px 12px}
+#msg{margin-top:12px;color:var(--dim)}
+</style></head><body><main>
+<h1>Publish an article</h1>
+<form id="f">
+<label>Admin key</label><input id="key" type="password" autocomplete="current-password" required>
+<label>Type</label><select id="kind"><option>Analysis</option><option>Theory</option><option>Character</option><option>Review</option><option selected>News</option></select>
+<label>Title</label><input id="title" required maxlength="200">
+<label>Anime id (optional, the number in an AniList link)</label><input id="aid" inputmode="numeric">
+<label>Text (a blank line starts a new paragraph)</label><textarea id="body" required></textarea>
+<button>Publish</button><p id="msg"></p>
+</form>
+<h2>Published</h2><div id="list"></div>
+<script src="config.js"></script><script>
+const $=s=>document.querySelector(s),msg=t=>$('#msg').textContent=t;
+async function load(){
+  const l=await (await fetch((window.NX_API||'')+'/api/articles')).json();
+  $('#list').innerHTML='';
+  l.forEach(a=>{
+    const r=document.createElement('div');r.className='row';
+    const s=document.createElement('span');s.textContent=a.kind+': '+a.title;
+    const b=document.createElement('button');b.textContent='Delete';b.type='button';
+    b.onclick=async()=>{
+      if(!confirm('Delete "'+a.title+'" and its comments?'))return;
+      const x=await fetch((window.NX_API||'')+'/api/articles/'+a.id,{method:'DELETE',headers:{'x-admin-key':$('#key').value}});
+      msg(x.ok?'Deleted.':'Not allowed, check the admin key.');if(x.ok)load()};
+    r.append(s,b);$('#list').append(r)})}
+$('#f').onsubmit=async e=>{
+  e.preventDefault();
+  const x=await fetch((window.NX_API||'')+'/api/articles',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':$('#key').value},
+    body:JSON.stringify({kind:$('#kind').value,title:$('#title').value,body:$('#body').value,anime_id:$('#aid').value||null})});
+  if(x.ok){msg('Published.');$('#title').value=$('#body').value=$('#aid').value='';load()}
+  else msg(x.status===403?'Wrong key, or ADMIN_KEY is not set on the server.':'Could not publish ('+x.status+')')};
+load();
+</script></main></body></html>
