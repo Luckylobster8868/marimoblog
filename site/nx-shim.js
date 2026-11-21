@@ -27,25 +27,33 @@ function gql(q,v,ttl=600){
   })());
 }
 const jget=async p=>{const r=await fetch(p);if(!r.ok)throw new Error(r.status);return r.json()};
-let _home,_news;const home=()=>_home||(_home=jget('data/home.json').catch(e=>{_home=0;throw e}));
-const newsData=()=>_news||(_news=jget('data/news.json').catch(e=>{_news=0;throw e}));
+const B=(()=>{try{const e=document.getElementById('boot');return e?JSON.parse(e.textContent):null}catch(e){return null}})(); // first-screen data the build embeds in index.html
+const J={};function jc(p,ttl=6e5){ // JSON files: one request per ttl; if a refresh fails the last good copy keeps being served
+  const c=J[p];if(c&&c.p&&Date.now()-c.t<ttl)return c.p;
+  const q=jget(p).then(d=>{J[p].d=d;return d},e=>{if(J[p]&&J[p].d)return J[p].d;delete J[p];throw e});
+  J[p]={t:Date.now(),p:q,d:c&&c.d};return q}
+const home=()=>jc('data/home.json'),newsData=()=>jc('data/news.json'),idx=()=>jc('data/anime/index.json',36e5),nmatch=()=>jc('data/anime/matches.json',6e5);
 const norm=s=>(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 const keys=names=>{const ks=[];for(const n of names)for(const v of [n||'',(n||'').split(/\s*[:\u2013\u2014]\s*|\s+-\s+/)[0]]){const k=' '+norm(v)+' ';if(k.length>=7&&!ks.includes(k))ks.push(k)}return ks};
 const strip=m=>JSON.parse(JSON.stringify(m));
 const recs=m=>m.recommendations.nodes.map(n=>n.mediaRecommendation).filter(Boolean);
-async function raw(id){const d=await gql(DETAIL,{id},3600);if(!d||!d.Media)throw new Error(404);return d.Media}
-const memo={},live={},_a={};let _art;
+const sid=B&&B.anime?new Set(B.anime):null,RAW={};
+async function raw(id){
+  if(B&&B.feat&&B.feat.id===id)return RAW[id]=B.feat.m;
+  if(!sid||sid.has(id)){try{const d=await jc('data/anime/'+id+'.json',36e5);if(d&&d.m)return RAW[id]=d.m}catch(e){}}
+  const d=await gql(DETAIL,{id},3600);if(!d||!d.Media)throw new Error(404);return RAW[id]=d.Media;
+}
+const memo={},live={};
 const isGet=o=>!o||!o.method||o.method==='GET';
 async function worker(p,o){
   if(!API)throw new Error('NX_API not set in site/config.js');
   const r=await fetch(API+'/api'+p,o);if(!r.ok)throw new Error(r.status);return r.json();
 }
-const artData=()=>_art||(_art=jget('data/articles.json').catch(e=>{_art=0;throw e}));
-const aFile=id=>_a[id]||(_a[id]=jget('data/a/'+id+'.json').catch(e=>{delete _a[id];throw e}));
+const artData=()=>jc('data/articles.json'),aFile=id=>jc('data/a/'+id+'.json');
 const mine=id=>lsget('nx:mine'+id,86400)||[];
-async function comments(id,fresh){ // static copy by default; the article page asks for live=1 (one Worker call, cached 20 s)
-  if(fresh&&API){
-    const c=live[id];if(c&&Date.now()-c.t<20000)return c.d;
+async function comments(id,fresh,force){ // static copy for everyone; live (one Worker call, cached 20 s) only after this visitor posted or pressed Refresh
+  if(fresh&&API&&(force||mine(id).length)){
+    const c=live[id];if(!force&&c&&Date.now()-c.t<20000)return c.d;
     try{const d=await worker('/articles/'+id+'/comments');live[id]={t:Date.now(),d};return d}catch(e){}
   }
   let st=[];try{st=(await aFile(id)).comments||[]}catch(e){}
@@ -76,8 +84,15 @@ async function links(id){
 }
 async function art(ids){
   const n=ids.split(',').filter(x=>/^\d+$/.test(x.trim())).map(Number).slice(0,40);if(!n.length)return[];
-  if(n.length===1){const m=await raw(n[0]);return[{id:m.id,best:m.bannerImage||m.coverImage.extraLarge,stills:[m.coverImage.extraLarge]}]}
-  return(await gql(ART,{i:n},3600)).Page.media.map(m=>({id:m.id,best:m.bannerImage||m.coverImage.extraLarge,stills:[m.coverImage.extraLarge]}));
+  const mk=(i,b,c)=>({id:i,best:b||c,stills:[c]}),out=[],need=[];
+  for(const i of n){const e=B&&B.art&&B.art[i];if(e)out.push(mk(i,e.b,e.c));else need.push(i)}
+  if(need.length){
+    const ix=await idx().catch(()=>({})),rest=[];
+    for(const i of need){const e=ix[i];if(e)out.push(mk(i,e.b,e.c));else rest.push(i)}
+    if(rest.length===1){const m=await raw(rest[0]);out.push(mk(m.id,m.bannerImage,m.coverImage.extraLarge))}
+    else if(rest.length)(await gql(ART,{i:rest},3600)).Page.media.forEach(m=>out.push(mk(m.id,m.bannerImage,m.coverImage.extraLarge)));
+  }
+  return out;
 }
 async function browse(q){
   const sort=q.get('sort')||'popular',s=(q.get('q')||'').trim().slice(0,100),genre=(q.get('genre')||'').trim().slice(0,30),year=+q.get('year')||0,page=Math.max(1,+q.get('page')||1);
@@ -88,19 +103,30 @@ async function browse(q){
   return(await gql('query('+d.join(',')+'){Page(page:$p,perPage:$n){media('+a.join(',')+',type:ANIME,isAdult:false){'+CARD+'}}}',v,600)).Page.media;
 }
 async function titles(ids){
-  const out={},need=[];
-  for(const i of ids){const c=lsget('nx:t'+i,43200);if(c)out[i]=c;else need.push(i)}
+  const out={},need=[];let ix;
+  for(const i of ids){
+    const c=lsget('nx:t'+i,43200);if(c){out[i]=c;continue}
+    const r=RAW[i];if(r){const ks=keys([r.title.english,r.title.romaji,...(r.synonyms||[]).slice(0,4)]);if(ks.length){out[i]=ks;lsset('nx:t'+i,ks)}continue}
+    if(ix===undefined)ix=await idx().catch(()=>({}));
+    const e=ix[i];if(e){const ks=keys(e.n);if(ks.length){out[i]=ks;lsset('nx:t'+i,ks)}}else need.push(i)}
   if(need.length)try{for(const m of(await gql(TIT,{ids:need},43200)).Page.media){const ks=keys([m.title.english,m.title.romaji,...(m.synonyms||[]).slice(0,4)]);lsset('nx:t'+m.id,ks);if(ks.length)out[m.id]=ks}}catch(e){}
   return out;
 }
 async function news(q){
-  const N=await newsData(),types=(q.get('type')||'').split(',').filter(Boolean).slice(0,5),src=q.get('source')||'',s=(q.get('q')||'').trim().toLowerCase();
+  const types=(q.get('type')||'').split(',').filter(Boolean).slice(0,5),src=q.get('source')||'',s=(q.get('q')||'').trim().toLowerCase();
   const idl=(q.get('ids')||'').split(',').filter(x=>/^\d+$/.test(x.trim())).map(Number).slice(0,50);
   const page=Math.max(1,+q.get('page')||1),per=Math.max(1,Math.min(+q.get('per')||12,48));
+  const bn=B&&B.news&&B.news[types.join(',')];if(bn&&bn.per===per&&page===1&&!src&&!s&&!idl.length)return bn.resp;
+  const N=await newsData();
   let L=N.items.filter(r=>(!types.length||types.includes(r.kind))&&(!src||r.source===src)&&(!s||(r.title+' '+r.excerpt).toLowerCase().includes(s)));
-  if(idl.length){
-    const T=Object.entries(await titles(idl));
-    L=T.length?L.map(r=>{const t=r._t||(r._t=' '+norm(r.title+' '+r.excerpt)+' ');const m=T.filter(([i,ks])=>ks.some(k=>t.includes(k))).map(([i])=>+i);return m.length?{...r,anime:m}:null}).filter(Boolean):[];
+  if(idl.length){ // news that mentions the anime: prebuilt lists first, matching in the browser only for anime without one
+    const mm=await nmatch().catch(()=>null),pre=mm?idl.filter(i=>mm[i]):[],rest=idl.filter(i=>!pre.includes(i)),sets={};
+    pre.forEach(i=>sets[i]=new Set(mm[i]));
+    const T=rest.length?Object.entries(await titles(rest)):[];
+    L=L.map(r=>{
+      const m=pre.filter(i=>sets[i].has(r.id));
+      if(T.length){const t=r._t||(r._t=' '+norm(r.title+' '+r.excerpt)+' ');for(const[i,ks]of T)if(ks.some(k=>t.includes(k)))m.push(+i)}
+      return m.length?{...r,anime:m}:null}).filter(Boolean);
   }
   const total=L.length;
   return{items:L.slice((page-1)*per,page*per).map(({_t,...r})=>r),total,page,pages:Math.max(1,Math.ceil(total/per)),updated:N.updated};
@@ -111,8 +137,8 @@ async function newsItem(id){
 }
 async function api(p,o){
   const u=new URL(p,'http://x'),path=u.pathname,q=u.searchParams;let m;
-  if(path==='/trending')return(await home()).trending;
-  if(path==='/season')return(await home()).season;
+  if(path==='/trending')return B&&B.trending?B.trending:(await home()).trending;
+  if(path==='/season')return B&&B.season?B.season:(await home()).season;
   if(path==='/upcoming')return(await home()).upcoming;
   if(path==='/calendar'){const end=Date.now()/1000+7*86400;return(await home()).calendar.filter(x=>x.nextAiringEpisode&&x.nextAiringEpisode.airingAt<end)}
   if(path==='/browse')return browse(q);
@@ -123,12 +149,12 @@ async function api(p,o){
   if(path==='/news')return news(q);
   if(m=path.match(/^\/news\/item\/(.+)$/))return newsItem(decodeURIComponent(m[1]));
   if(path==='/sources')return(await newsData()).sources;
-  if(path==='/poll'&&isGet(o))return memo.poll||artData().then(d=>d.poll,()=>worker('/poll'));
+  if(path==='/poll'&&isGet(o))return memo.poll||(B&&B.poll)||artData().then(d=>d.poll,()=>worker('/poll'));
   if(path==='/poll/vote'){const d=await worker(p,o);memo.poll=d;return d}
-  if(path==='/articles'&&isGet(o))return artData().then(d=>d.list,()=>worker('/articles'));
+  if(path==='/articles'&&isGet(o))return(B&&B.articles)||artData().then(d=>d.list,()=>worker('/articles'));
   if((m=path.match(/^\/articles\/(\d+)$/))&&isGet(o))return aFile(m[1]).then(d=>d.article,()=>worker('/articles/'+m[1]));
-  if(m=path.match(/^\/articles\/(\d+)\/comments$/))return isGet(o)?comments(m[1],q.get('live')==='1'):postComment(m[1],o);
+  if(m=path.match(/^\/articles\/(\d+)\/comments$/))return isGet(o)?comments(m[1],q.get('live')==='1',q.get('force')==='1'):postComment(m[1],o);
   return worker(p,o);
 }
-window.NX={api,live:jget('data/home.json').then(()=>true,()=>false)};
+window.NX={api,live:B?Promise.resolve(true):jget('data/home.json').then(()=>true,()=>false)};
 })();

@@ -4,7 +4,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://s4.anilist.co">
 <title>marimoblog — Anime, analysed</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#14161a"><script>if(location.hash.slice(2))document.documentElement.classList.add('deep')</script><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"></noscript>
 <style>
 :root{--bg:#14161a;--alt:#1b1e23;--card:#1e2126;--fg:#f2efe9;--dim:#9aa2ac;--faint:#656d78;--accent:#6fa892;--soft:rgba(111,168,146,.14);--amber:#d1a25e;--line:rgba(242,239,233,.1);--r:10px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#14161a}}
@@ -72,53 +72,68 @@ header .w{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:2px;gap:0}
 nav{order:2;width:100%;justify-content:space-between;gap:10px;font-size:13px;padding:4px 0 6px}
 }
 @media(max-width:370px){nav{gap:8px;font-size:12.5px}}
+
+/* polish: transitions, states, skeletons, lazy images. Only transform/opacity animate; all motion is off under prefers-reduced-motion. */
+.deep #home{display:none}.deep #view[hidden]{display:block}
+i{position:relative}
+.poster i,.anime i,.pair i,.ci,.still{display:block;overflow:hidden;background-color:#2a2e35}
+i>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .25s ease}i>img.ld{opacity:1}
+.ci,.still,.vp{background-position:center;background-size:cover}
+.card,.poster i,.tag,.nm,.f button,.pgr button,.vp{transition:transform .18s ease,border-color .18s ease,background-color .18s ease,color .18s ease,filter .18s ease,opacity .18s ease}
+@media(hover:hover){a.card:hover{transform:translateY(-2px);border-color:rgba(111,168,146,.45)}.poster:hover i{transform:translateY(-2px);border-color:rgba(111,168,146,.45)}a.tag:hover,.nm:hover,.f button:hover:not(:disabled){filter:brightness(1.12)}}
+.f button:active:not(:disabled),.nm:active,a.tag:active{transform:translateY(1px)}
+.f button:disabled,.nm:disabled{opacity:.55;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.f input:focus-visible,.f textarea:focus-visible,.f select:focus-visible{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--soft)}
+.poll div[data-o]{cursor:pointer;transition:background-color .18s ease}.poll div[data-o]:hover{background:var(--alt)}
+.poll div:before{transition:width .5s cubic-bezier(.2,.7,.2,1);animation:grow .6s cubic-bezier(.2,.7,.2,1)}
+@keyframes grow{from{width:0}}
+@keyframes rise{from{opacity:.35;transform:translateY(6px)}to{opacity:1;transform:none}}
+#view:not([hidden])>*{animation:rise .2s ease-out}
+@keyframes pulse{50%{opacity:.5}}
+.sk{background:var(--card);border-radius:6px;color:transparent!important;animation:pulse 1.3s ease-in-out infinite}
+.sk>*{visibility:hidden}
+.skc{min-height:112px}
+.sk-p i,.sk-p b,.sk-p span{background:var(--card);animation:pulse 1.3s ease-in-out infinite}.sk-p b,.sk-p span{display:block;height:12px;margin-top:8px;border-radius:6px;color:transparent}.sk-p span{width:55%}
+.pst{margin-top:8px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style></head><body>
-<header><div class="w"><a class="logo" href="#/">marimo<b>blog</b></a><nav><a href="#/">Home</a><a href="#/articles">Articles</a><a href="#/anime">Anime</a><a href="#/season">Seasonal</a><a href="#/listen">Listen</a><a href="#/community">Community</a></nav></div></header>
+<header><div class="w"><a class="logo" href="#/">marimo<b>blog</b></a><nav aria-label="Primary"><a href="#/">Home</a><a href="#/articles">Articles</a><a href="#/anime">Anime</a><a href="#/season">Seasonal</a><a href="#/listen">Listen</a><a href="#/community">Community</a></nav></div></header>
 <main class="w">
 <div id="home">
 
-<a class="hero" href="#"><div><span class="tag">Analysis</span><span class="tag">One Piece</span></div>
-<h1>Why Luffy's real power isn't Gear 5</h1><p>The characters who understand him, and what Egghead quietly set up.</p></a>
+<a class="hero" href="#/articles" aria-busy="true"><div><span class="tag sk">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div><h1 class="sk" style="height:34px;width:78%"></h1><p class="sk" style="height:16px;width:55%"></p></a>
 
 <h2>Trending now <a href="#/trending">View all</a></h2>
-<div class="row" id="trend"></div>
+<div class="row" id="trend"><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div></div>
 
 <h2>Latest articles <a href="#/articles">View all</a></h2>
-<div class="cards">
-<div class="card"><span class="tag">Review</span><h3>Magilumiere Magical Girls Inc. S2: a clever, optimistic comeback</h3><p class="meta">Oct 8 · 6 min · 3 comments</p></div>
-<div class="card"><span class="tag">Theory</span><h3>Every foreshadowing detail in Egghead, ranked</h3><p class="meta">Oct 7 · 9 min · 41 comments</p></div>
-<div class="card"><span class="tag">Character</span><h3>The quiet cruelty of the best side characters</h3><p class="meta">Oct 6 · 5 min · 12 comments</p></div>
-<div class="card"><span class="tag">News</span><h3>Hideaki Anno co-directs Yamato 2199 film at I.G</h3><p class="meta">Oct 6 · 2 min · 11 comments</p></div>
-</div>
+<div class="cards"><div class="card skc sk" aria-hidden="true"></div><div class="card skc sk" aria-hidden="true"></div><div class="card skc sk" aria-hidden="true"></div><div class="card skc sk" aria-hidden="true"></div></div>
 
-<h2>From around the web <a href="#/articles">View all</a></h2><div id="hn"></div>
-<h2>Watch &amp; listen <a href="#/listen">View all</a></h2><div id="hw"></div>
+<h2>From around the web <a href="#/news">View all</a></h2>
+<div id="hn"><div class="cards nl"><div class="card skc sk" aria-hidden="true"></div><div class="card skc sk" aria-hidden="true"></div></div></div>
+
+<div id="hw"></div>
+
 <h2>The anime page, as a discovery engine</h2>
-<div class="anime"><i></i><div style="flex:1"><b style="font-size:18px">One Piece</b>
-<div class="score">9.2 <span class="meta">/ 10 · 1.15M watched</span></div>
-<p class="meta">Community 8.7 · 2,431 discussions</p>
-<ul><li>Analysis: Why Luffy's real power isn't Gear 5</li><li>Analysis: The characters who understand Luffy</li><li>Theory: Egghead foreshadowing, explained</li></ul></div></div>
+<div class="anime"><i class="sk"></i><div style="flex:1"><b class="sk" style="display:block;height:20px;width:50%"></b><p class="meta sk" style="height:12px;width:35%;margin-top:12px"></p><p class="meta sk" style="height:12px;width:60%;margin-top:12px"></p></div></div>
 
-<h2>Airing this season · Fall 2026 <a href="#/season">Calendar</a></h2>
-<div class="row" id="fall"></div>
+<h2>Airing this season <a href="#/season">Calendar</a></h2>
+<div class="row" id="fall"><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div><div class="poster sk-p" aria-hidden="true"><i class="sk"></i><b class="sk">&nbsp;</b><span class="sk">&nbsp;</span></div></div>
 
 <h2>If you liked… you might like</h2>
-<div class="card"><div class="pair"><div><i style="background:linear-gradient(#3b6e8f,#9ad1c4)"></i>Anne Shirley</div><em>→</em><div><i style="background:linear-gradient(#e87fa0,#f6d6e4)"></i>Ashita no Nadja</div></div>
-<p class="meta" style="margin-top:10px">Both are warm, character-first classics. <a style="color:var(--accent)" href="#">Read the reasoning</a></p></div>
+<div class="card"><div class="pair"><div><i class="sk"></i></div><em>→</em><div><i class="sk"></i></div></div><p class="meta" style="margin-top:10px">&nbsp;</p></div>
 
 <h2>Weekly poll</h2>
-<div class="card poll"><b>Best premiere of Fall 2026?</b>
-<div style="--p:46%"><span>Monogatari: Off &amp; Monster Season</span><span>46%</span></div>
-<div style="--p:31%"><span>Liberated from Paradise</span><span>31%</span></div>
-<div style="--p:23%"><span>Horror Collector</span><span>23%</span></div></div>
+<div class="card poll"><b>Best premiere this season?</b><div class="sk" style="--p:0%"><span>&nbsp;</span><span></span></div><div class="sk" style="--p:0%"><span>&nbsp;</span><span></span></div><div class="sk" style="--p:0%"><span>&nbsp;</span><span></span></div></div>
 
 </div>
-<div id="view" hidden></div>
+<div id="view" hidden><div class="sk-page" role="status" aria-label="Loading"><div class="hero sk" style="height:96px"></div></div></div>
 <footer>marimoblog · independent anime editorial. Prototype layout.</footer>
 </main>
-<script src="config.js"></script><script src="nx-shim.js"></script><script>
+<script id="boot" type="application/json">null</script><script src="config.js"></script><script src="nx-shim.js"></script><script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const DEMO=(()=>{
+const mkDemo=()=>{
 const hu=[160,25,210,330,45,270,190,0,100,300,70,240],base=Math.floor(Date.now()/1000);
 const img=(n,i)=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="260" height="390"><rect width="260" height="390" fill="hsl(${hu[i%12]},26%,28%)"/><text x="130" y="205" fill="#ffffff80" font-family="sans-serif" font-size="52" text-anchor="middle">${n.split(' ').slice(0,2).map(w=>w[0]).join('')}</text></svg>`).replace(/\(/g,'%28').replace(/\)/g,'%29');
 const N=['The Exiled Heavy Knight Knows How to Game the System','Koori no Jouheki 2nd Season','Hyouken no Majutsushi','One Piece','FX Senshi Kurumi-chan','Black Clover','Magical Explorer','Clevatess Season 2','Reborn as a Space Mercenary','JoJo’s Bizarre Adventure: Steel Ball Run','Monogatari: Off & Monster Season','Horror Collector','Liberated from Paradise','Aobuta: Dear Friend','Magic Exile Second Life','Owarinishi Family'];
@@ -154,7 +169,8 @@ return(p,o)=>{
       stats:{statusDistribution:[['CURRENT',43490],['PLANNING',20427],['DROPPED',2314],['PAUSED',919]].map(([status,amount])=>({status,amount}))},
       recs:M.slice(4,8),articles:A.filter(a=>a.anime_id===m.id).map(({id,title,kind,created})=>({id,title,kind,created}))}}
   throw new Error(404)};
-})();
+};
+const DEMO=(p,o)=>(DEMO.f||(DEMO.f=mkDemo()))(p,o);
 const LIVE=NX.live;
 const api=async(p,o)=>{if(!await LIVE)return DEMO(p,o);return NX.api(p,o)};
 const t=m=>m.title.english||m.title.romaji;
@@ -162,11 +178,19 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const cover=u=>`background:url(${cssu(u)}) center/cover,#2a2e35`;
 const star=m=>m.averageScore?'★ '+(m.averageScore/10).toFixed(1):'';
 const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const when=s=>{const d=new Date(String(s).replace(' ','T')+(/[zZ]|[+-]\d\d:\d\d$/.test(s)?'':'Z'));return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+const MON='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),dfmt=(d,y)=>MON[d.getMonth()]+' '+d.getDate()+(y?', '+d.getFullYear():'');
+const when=s=>{const d=new Date(String(s).replace(' ','T')+(/[zZ]|[+-]\d\d:\d\d$/.test(s)?'':'Z'));return isNaN(d)?'':dfmt(d)};
 const deck=s=>{s=(s||'').replace(/\s+/g,' ').trim();return s.length>=160?s.slice(0,s.lastIndexOf(' '))+'…':s};
 const fmtN=n=>n>=1e6?+(n/1e6).toFixed(2)+'M':n>=1e3?Math.round(n/1e3)+'K':String(n||0);
 const label=m=>m.startDate&&m.startDate.month&&m.startDate.day?MO[m.startDate.month-1]+' '+m.startDate.day:star(m);
-const poster=(m,sub)=>`<a class="poster" href="#/anime/${m.id}"><i style="${cover(m.coverImage.large)}"></i><b>${esc(t(m))}</b><span>${sub??star(m)}</span></a>`;
+const cssurl=u=>"url('"+String(u).replace(/['"()\\\s]/g,c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0'))+"')";
+const isrc=u=>/^(https?:\/\/|data:image\/)/i.test(u||'')?u:'';
+const im=(u,eager)=>{u=isrc(u);return u?`<img src="${esc(u)}" alt="" ${eager?'fetchpriority="high"':'loading="lazy"'} decoding="async" onload="this.classList.add('ld')">`:''};
+const bgset=e=>{const u=e.dataset.bg;e.removeAttribute('data-bg');if(isrc(u))e.style.backgroundImage=cssurl(u)};
+const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);bgset(e.target)}}),{rootMargin:'400px 0px'}):null;
+const lazyBg=()=>document.querySelectorAll('[data-bg]').forEach(e=>io?io.observe(e):bgset(e));
+const hideSec=(sel,on)=>{const e=$(sel);if(!e)return;const c=sel==='.pair'?e.parentElement:e,h=c.previousElementSibling;c.hidden=on;if(h&&h.tagName==='H2')h.hidden=on};
+const poster=(m,sub)=>`<a class="poster" href="#/anime/${m.id}"><i>${im(m.coverImage.large)}</i><b>${esc(t(m))}</b><span>${sub??star(m)}</span></a>`;
 const card=(a,n)=>`<a class="card" href="#/article/${a.id}">${a.anime_id?`<i class="ci" data-an="${a.anime_id}"></i>`:''}<span class="tag">${esc(a.kind)}</span><h3>${esc(a.title)}</h3><p class="meta">${[when(a.created),n!=null&&n+(n===1?' comment':' comments')].filter(Boolean).join(' · ')}</p></a>`;
 const talk=async m=>(await Promise.all(m.articles.map(a=>api('/articles/'+a.id+'/comments').then(c=>c.length,()=>0)))).reduce((a,b)=>a+b,0);
 const home=$('#home'),V=$('#view');let loaded=false;
@@ -174,41 +198,67 @@ const home=$('#home'),V=$('#view');let loaded=false;
 /* home */
 function discovery(m,n){
   const rows=m.articles.length?m.articles.map(a=>`<a href="#/article/${a.id}">${esc(a.kind)}: ${esc(a.title)}</a>`):m.recs.slice(0,3).map(r=>`<a href="#/anime/${r.id}">Similar: ${esc(t(r))}</a>`);
-  $('.anime').innerHTML=`<i style="${cover(m.coverImage.large)}"></i><div style="flex:1"><a href="#/anime/${m.id}"><b style="font-size:18px">${esc(t(m))}</b></a><div class="score">${m.averageScore?(m.averageScore/10).toFixed(1):'–'} <span class="meta">/ 10 · ${fmtN(m.popularity)} on lists</span></div><p class="meta">${m.articles.length} articles · ${n} discussions</p><ul>${rows.map(r=>`<li>${r}</li>`).join('')}</ul></div>`;
+  $('.anime').innerHTML=`<i>${im(m.coverImage.large)}</i><div style="flex:1"><a href="#/anime/${m.id}"><b style="font-size:18px">${esc(t(m))}</b></a><div class="score">${m.averageScore?(m.averageScore/10).toFixed(1):'–'} <span class="meta">/ 10 · ${fmtN(m.popularity)} on lists</span></div><p class="meta">${m.articles.length} articles · ${n} discussions</p><ul>${rows.map(r=>`<li>${r}</li>`).join('')}</ul></div>`;
 }
 function pair(m){
-  const r=m.recs[0];if(!r)return;
-  $('.pair').innerHTML=`<a href="#/anime/${m.id}"><i style="${cover(m.coverImage.large)}"></i>${esc(t(m))}</a><em>→</em><a href="#/anime/${r.id}"><i style="${cover(r.coverImage.large)}"></i>${esc(t(r))}</a>`;
+  const r=m.recs[0];if(!r){hideSec('.pair',true);return}
+  $('.pair').innerHTML=`<a href="#/anime/${m.id}"><i>${im(m.coverImage.large)}</i>${esc(t(m))}</a><em>→</em><a href="#/anime/${r.id}"><i>${im(r.coverImage.large)}</i>${esc(t(r))}</a>`;
   $('.pair').parentElement.querySelector('p').textContent='Recommended by AniList readers who liked '+t(m)+'.';
 }
+const VK=()=>'nx:voted:'+new Date().toISOString().slice(0,10),voted=()=>{try{return localStorage.getItem(VK())}catch(e){return null}};
 function poll(rows,box=$('.poll')){
   const tot=rows.reduce((s,r)=>s+r.votes,0)||1;
-  box.querySelectorAll('div').forEach(d=>d.remove());
-  rows.forEach(r=>{const p=Math.round(r.votes/tot*100),d=document.createElement('div');
-    d.style.setProperty('--p',p+'%');d.style.cursor='pointer';d.innerHTML=`<span>${esc(r.option)}</span><span>${p}%</span>`;
-    d.onclick=async()=>{try{poll(await api('/poll/vote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({option:r.option})}),box)}catch(e){}};box.append(d)});
+  box.querySelectorAll('div:not([data-o])').forEach(d=>d.remove());
+  rows.forEach(r=>{
+    const p=Math.round(r.votes/tot*100);let d=[...box.querySelectorAll('div[data-o]')].find(x=>x.dataset.o===r.option);
+    if(!d){
+      d=document.createElement('div');d.dataset.o=r.option;d.tabIndex=0;d.setAttribute('role','button');d.innerHTML='<span></span><span></span>';
+      const vote=async()=>{
+        if(box.dataset.busy)return;let n=box.querySelector('.pst');
+        if(!n){n=document.createElement('p');n.className='meta pst';n.setAttribute('role','status');box.append(n)}
+        if(voted()){n.textContent='You already voted today. Thanks!';return}
+        box.dataset.busy=1;
+        try{poll(await api('/poll/vote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({option:r.option})}),box);
+          box.querySelectorAll('div[data-o]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.o===r.option));try{localStorage.setItem(VK(),r.option)}catch(e){}n.textContent='Thanks, vote recorded.'}
+        catch(e){n.textContent=/429/.test(e.message)?'Slow down: a few votes a minute, please.':'Could not record your vote. Please try again.'}
+        finally{delete box.dataset.busy}
+      };
+      d.onclick=vote;d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();vote()}};box.insertBefore(d,box.querySelector('.pst'));
+    }
+    d.firstChild.textContent=r.option;d.lastChild.textContent=p+'%';d.style.setProperty('--p',p+'%');
+  });
+  const pv=voted();if(pv)box.querySelectorAll('div[data-o]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.o===pv));
 }
 async function loadHome(){
   const[A,T,S,P]=await Promise.allSettled([api('/articles'),api('/trending'),api('/season'),api('/poll')]);
-  if(T.status==='fulfilled'&&T.value.length)$('#trend').innerHTML=T.value.map(m=>poster(m)).join('');
-  if(S.status==='fulfilled'){
-    if(S.value.media.length)$('#fall').innerHTML=S.value.media.map(m=>poster(m,label(m))).join('');
+  const ok=r=>r.status==='fulfilled';
+  $('#trend').innerHTML=ok(T)&&T.value.length?T.value.map(m=>poster(m)).join(''):'<p class="meta">Trending anime is unavailable right now.</p>';
+  if(ok(S)&&S.value.media.length){
+    $('#fall').innerHTML=S.value.media.map(m=>poster(m,label(m))).join('');
     const lb=S.value.season+' '+S.value.year;
     $$('h2').find(h=>h.textContent.startsWith('Airing')).firstChild.textContent='Airing this season · '+lb+' ';
     $('.poll b').textContent='Best premiere of '+lb+'?';
-  }
-  if(P.status==='fulfilled'&&P.value.length)poll(P.value);
-  const arts=A.status==='fulfilled'?A.value:[];let feat=null;
-  if(arts[0]&&arts[0].anime_id)try{feat=await api('/anime/'+arts[0].anime_id)}catch(e){}
+  }else $('#fall').innerHTML='<p class="meta">The season list is unavailable right now.</p>';
+  if(ok(P)&&P.value.length){hideSec('.poll',false);poll(P.value)}else hideSec('.poll',true);
+  const arts=ok(A)?A.value:[],h=$('.hero');h.removeAttribute('aria-busy');
   if(arts[0]){
-    const h=$('.hero');h.href='#/article/'+arts[0].id;
-    h.innerHTML=`<div><span class="tag">${esc(arts[0].kind)}</span>${feat?`<span class="tag">${esc(t(feat))}</span>`:''}</div><h1>${esc(arts[0].title)}</h1><p>${esc(deck(arts[0].excerpt))}</p>`;
-    const top=arts.slice(0,4),box=$('.cards');box.innerHTML=top.map(a=>card(a)).join('');
-    top.forEach(async(a,i)=>{try{const[f,c]=await Promise.all([api('/articles/'+a.id),api('/articles/'+a.id+'/comments')]);
-      const min=Math.max(1,Math.ceil(f.body.trim().split(/\s+/).length/200));
-      box.children[i].querySelector('.meta').textContent=[when(a.created),min+' min',c.length+(c.length===1?' comment':' comments')].join(' · ')}catch(e){}});
+    h.href='#/article/'+arts[0].id;
+    h.innerHTML=`<div><span class="tag">${esc(arts[0].kind)}</span></div><h1>${esc(arts[0].title)}</h1><p>${esc(deck(arts[0].excerpt))}</p>`;
+    const top=arts.slice(0,4),box=$('.cards');box.innerHTML=top.map(a=>card(a,a.comments)).join('');
+    top.forEach(async(a,i)=>{
+      const meta=box.children[i]&&box.children[i].querySelector('.meta');if(!meta)return;
+      if(a.min!=null){const n=a.comments||0;meta.textContent=[when(a.created),a.min+' min',n+(n===1?' comment':' comments')].join(' · ');return}
+      try{const[f,c]=await Promise.all([api('/articles/'+a.id),api('/articles/'+a.id+'/comments')]);
+        meta.textContent=[when(a.created),Math.max(1,Math.ceil(f.body.trim().split(/\s+/).length/200))+' min',c.length+(c.length===1?' comment':' comments')].join(' · ')}catch(e){}
+    });
+  }else{
+    h.href='#/articles';h.innerHTML='<div><span class="tag">marimoblog</span></div><h1>Welcome</h1><p>Articles will appear here soon.</p>';
+    $('.cards').innerHTML='<p class="meta">Nothing published yet.</p>';
   }
-  if(!feat&&T.status==='fulfilled'&&T.value[0])try{feat=await api('/anime/'+T.value[0].id)}catch(e){}
+  let feat=null;const fa=arts[0]&&arts[0].anime_id;
+  if(fa)try{feat=await api('/anime/'+fa);const tg=$('.hero>div');if(tg&&!tg.querySelector('.ft'))tg.insertAdjacentHTML('beforeend',`<span class="tag ft">${esc(t(feat))}</span>`)}catch(e){}
+  if(!feat&&ok(T)&&T.value[0])try{feat=await api('/anime/'+T.value[0].id)}catch(e){}
+  hideSec('.anime',!feat);hideSec('.pair',!feat);
   if(feat){discovery(feat,await talk(feat));pair(feat)}
 }
 
@@ -218,8 +268,8 @@ const sec=(h,l,b)=>`<h2>${h}${l?` <a href="${l[1]}">${l[0]}</a>`:''}</h2>${b}`;
 const row=(l,f)=>`<div class="row">${l.map(m=>poster(m,f&&f(m))).join('')}</div>`;
 const grid=(l,f)=>`<div class="grid">${l.map((m,i)=>poster(m,f&&f(m,i))).join('')}</div>`;
 const cnt=a=>a.comments!=null?Promise.resolve(a.comments):api('/articles/'+a.id+'/comments').then(c=>c.length,()=>0);
-const wait=()=>{V.innerHTML='<p class="meta" style="margin-top:26px">Loading…</p>'};
-const oops=s=>{V.innerHTML=`<p class="meta" style="margin-top:26px">${s}</p>`};
+const wait=()=>{V.innerHTML='<div class="sk-page" role="status" aria-label="Loading"><div class="hero sk" style="height:96px"></div><div class="cards" style="margin-top:14px"><div class="card skc sk"></div><div class="card skc sk"></div></div></div>'};
+const oops=s=>{V.innerHTML=`<div role="alert" style="margin-top:26px"><p class="meta">${s}</p><button type="button" class="nm" onclick="route()">Try again</button></div>`};
 
 async function pgArticles(){
   wait();
@@ -239,12 +289,21 @@ async function pgArticles(){
 async function pgArticle(id){
   wait();
   try{
-    const a=await api('/articles/'+id);let an=null;
-    if(a.anime_id)try{an=await api('/anime/'+a.anime_id)}catch(e){}
+    const a=await api('/articles/'+id);
     const min=Math.max(1,Math.ceil(a.body.trim().split(/\s+/).length/200));
-    V.innerHTML=`<div class="read">${an&&an.bannerImage?`<div class="banner" style="background:url(${an.bannerImage}) center/cover"></div>`:''}<div style="margin-top:26px"><span class="tag">${esc(a.kind)}</span>${an?`<a class="tag" href="#/anime/${an.id}">${esc(t(an))}</a>`:''}</div><h1 style="font-size:30px;line-height:1.2;margin:12px 0 6px;letter-spacing:-.02em">${esc(a.title)}</h1><p class="meta">${when(a.created)} · ${min} min read</p>${a.body.split(/\n+/).map(p=>`<p>${esc(p)}</p>`).join('')}<h2>Comments</h2><div class="f"><input id="cn" maxlength="40" placeholder="Name"><textarea id="ct" rows="3" placeholder="Add a comment"></textarea><button id="cb">Post comment</button></div><div id="cl"></div></div>`;
-    const load=async()=>{$('#cl').innerHTML=(await api('/articles/'+id+'/comments?live=1')).map(x=>`<div class="card" style="margin-top:10px"><b>${esc(x.name)}</b> <span class="meta">${when(x.created)}</span><p>${esc(x.text)}</p></div>`).join('')};
-    $('#cb').onclick=async()=>{const x=$('#ct').value.trim();if(!x)return;await api('/articles/'+id+'/comments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('#cn').value||'Anonymous',text:x})});$('#ct').value='';load()};
+    V.innerHTML=`<div class="read">${a.anime_id?'<div class="banner sk" id="ab"></div>':''}<div style="margin-top:26px"><span class="tag">${esc(a.kind)}</span><span id="at"></span></div><h1 style="font-size:30px;line-height:1.2;margin:12px 0 6px;letter-spacing:-.02em">${esc(a.title)}</h1><p class="meta">${when(a.created)} · ${min} min read</p>${a.body.split(/\n+/).map(p=>`<p>${esc(p)}</p>`).join('')}<h2>Comments <button type="button" class="nm" id="cr" style="margin:0;padding:4px 12px;font-size:12px">Refresh</button></h2><div class="f"><input id="cn" maxlength="40" placeholder="Name" aria-label="Your name"><textarea id="ct" rows="3" placeholder="Add a comment" aria-label="Comment"></textarea><button id="cb">Post comment</button> <span class="meta" id="cs" role="status" aria-live="polite"></span></div><div id="cl"></div></div>`;
+    const here=()=>location.hash==='#/article/'+id;
+    if(a.anime_id)api('/anime/'+a.anime_id).then(an=>{if(!here())return;const b=$('#ab');
+      if(b){if(an.bannerImage){b.classList.remove('sk');b.style.background=cssurl(isrc(an.bannerImage))+' center/cover'}else b.remove()}
+      const tg=$('#at');if(tg)tg.innerHTML=`<a class="tag" href="#/anime/${an.id}">${esc(t(an))}</a>`},()=>{const b=$('#ab');if(b&&here())b.remove()});
+    const load=async force=>{$('#cl').innerHTML=(await api('/articles/'+id+'/comments?live=1'+(force?'&force=1':''))).map(x=>`<div class="card" style="margin-top:10px"><b>${esc(x.name)}</b> <span class="meta">${when(x.created)}</span><p>${esc(x.text)}</p></div>`).join('')};
+    $('#cb').onclick=async()=>{
+      const x=$('#ct').value.trim(),b=$('#cb'),st=$('#cs');if(!x||b.disabled)return;b.disabled=true;st.textContent='Posting…';
+      try{await api('/articles/'+id+'/comments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('#cn').value||'Anonymous',text:x})});$('#ct').value='';st.textContent='Posted ✓';await load()}
+      catch(e){st.textContent=/429/.test(e.message)?'Slow down: please wait a minute before posting again.':'Could not post your comment. Please try again.'}
+      finally{b.disabled=false}
+    };
+    $('#cr').onclick=async()=>{const b=$('#cr');b.disabled=true;try{await load(true)}catch(e){}finally{b.disabled=false}};
     load();
   }catch(e){V.innerHTML='<p class="meta" style="margin-top:26px">Article not found.</p>'}
 }
@@ -255,14 +314,14 @@ async function pgAnime(id){
     const m=await api('/anime/'+id),n=(await Promise.all(m.articles.map(cnt))).reduce((a,b)=>a+b,0),sd=(m.stats&&m.stats.statusDistribution)||[],tot=sd.reduce((s,x)=>s+x.amount,0)||1;
     const tags=(m.tags||[]).filter(x=>!x.isMediaSpoiler).slice(0,10),ch=(m.characters&&m.characters.edges)||[],st=(m.staff&&m.staff.edges)||[],rel=(m.relations&&m.relations.edges)||[];
     const studio=m.studios&&m.studios.nodes[0]&&m.studios.nodes[0].name;
-    V.innerHTML=(m.bannerImage?`<div class="banner" style="background:url(${m.bannerImage}) center/cover"></div>`:'')
+    V.innerHTML=(m.bannerImage?`<div class="banner" style="background:url('${cssu(safe(m.bannerImage))}') center/cover"></div>`:'')
       +hd([m.format,m.seasonYear,m.status&&m.status.replace(/_/g,' ').toLowerCase()],t(m),[studio,m.episodes&&m.episodes+' episodes',(m.genres||[]).slice(0,3).join(', ')].filter(Boolean).join(' · '))
-      +`<div class="anime" style="margin-top:14px"><i style="${cover(m.coverImage.large)}"></i><div style="flex:1"><div class="score">${m.averageScore?(m.averageScore/10).toFixed(1):'–'} <span class="meta">/ 10</span></div><div class="stat"><div><b>${fmtN(m.popularity)}</b><span>on lists</span></div><div><b>${m.articles.length}</b><span>articles</span></div><div><b>${n}</b><span>discussions</span></div></div></div></div>`
+      +`<div class="anime" style="margin-top:14px"><i>${im(m.coverImage.large,1)}</i><div style="flex:1"><div class="score">${m.averageScore?(m.averageScore/10).toFixed(1):'–'} <span class="meta">/ 10</span></div><div class="stat"><div><b>${fmtN(m.popularity)}</b><span>on lists</span></div><div><b>${m.articles.length}</b><span>articles</span></div><div><b>${n}</b><span>discussions</span></div></div></div></div>`
       +sec('Synopsis',0,`<p class="meta" style="font-size:15px;line-height:1.65">${esc((m.description||'No synopsis yet.').replace(/<[^>]*>/g,''))}</p>`)
       +sec('Genres and tags',0,`<div>${(m.genres||[]).map(g=>`<span class="tag">${esc(g)}</span>`).join('')}${tags.map(x=>`<span class="tag">${esc(x.name)} ${x.rank}%</span>`).join('')}</div>`)
       +sec('Articles about this anime',['All articles','#/articles'],m.articles.length?`<div class="cards">${m.articles.map(a=>card(a)).join('')}</div>`:'<p class="meta">Nothing written about this one yet.</p>')
       +(sd.length?sec('Status distribution',0,`<div class="card poll">${sd.map(x=>`<div style="--p:${Math.round(x.amount/tot*100)}%"><span>${esc(x.status[0]+x.status.slice(1).toLowerCase())}</span><span>${x.amount.toLocaleString()}</span></div>`).join('')}</div>`):'')
-      +(ch.length?sec('Characters',0,`<div class="row">${ch.map(e=>`<div class="poster"><i style="${cover(e.node.image.medium)}"></i><b>${esc(e.node.name.full)}</b><span>${esc(e.role.toLowerCase())}</span></div>`).join('')}</div>`):'')
+      +(ch.length?sec('Characters',0,`<div class="row">${ch.map(e=>`<div class="poster"><i>${im(e.node.image.medium)}</i><b>${esc(e.node.name.full)}</b><span>${esc(e.role.toLowerCase())}</span></div>`).join('')}</div>`):'')
       +(st.length?sec('Staff',0,`<div class="card"><ul class="sch">${st.map(e=>`<li><span>${esc(e.node.name.full)}</span><span class="meta">${esc(e.role)}</span></li>`).join('')}</ul></div>`):'')
       +(rel.length?sec('Related',0,row(rel.map(e=>e.node),m=>esc((rel.find(e=>e.node.id===m.id).relationType||'').replace(/_/g,' ').toLowerCase()))):'')
       +'<div id="sim"></div><div id="gal"></div>'+sec('In the news',0,'<div id="nws"></div>')+'<div id="lnk"></div>';
@@ -271,7 +330,7 @@ async function pgAnime(id){
     api('/links/'+id).then(L=>put('#lnk',sec('Sources and official links',0,'<div class="card"><ul class="sch">'+L.map(x=>`<li><a href="${esc(safe(x.url))}" target="_blank" rel="noopener noreferrer">${esc(x.label)} ↗</a><span class="meta">${esc(x.kind)}</span></li>`).join('')+'</ul></div>')),()=>{});
     const fb=()=>{if(m.recs&&m.recs.length)put('#sim',sec('If you liked this',0,row(m.recs)))};
     api('/similar/'+id).then(l=>l.length?put('#sim',sec('If you liked this',0,row(l,x=>x.why))):fb(),fb);
-    api('/art?ids='+id).then(([a])=>{if(a&&a.stills.length)put('#gal',sec('Gallery',0,'<div class="row">'+a.stills.map(s=>`<i class="still" style="background-image:url(${s})"></i>`).join('')+'</div>'))},()=>{});
+    api('/art?ids='+id).then(([a])=>{if(a&&a.stills.length)put('#gal',sec('Gallery',0,'<div class="row">'+a.stills.map(s=>`<i class="still">${im(s)}</i>`).join('')+'</div>'))},()=>{});
   }catch(e){oops('Could not load this anime.')}
 }
 function pgBrowse(){
@@ -318,8 +377,9 @@ async function pgCommunity(){
 
 function route(){
   const[h,a]=location.hash.slice(2).split('/');
+  document.documentElement.classList.remove('deep');
   home.hidden=!!h;V.hidden=!h;
-  $$('nav a').forEach(x=>x.style.color=x.getAttribute('href')==='#/'+(h||'')?'var(--fg)':'var(--dim)');
+  $$('nav a').forEach(x=>{const on=x.getAttribute('href')==='#/'+(h||'');x.style.color=on?'var(--fg)':'var(--dim)';if(on)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current')});
   if(!h){if(!loaded){loaded=true;loadHome()}return}
   scrollTo(0,0);
   ({articles:pgArticles,article:()=>pgArticle(a),anime:()=>a?pgAnime(a):pgBrowse(),season:pgSeason,community:pgCommunity,trending:pgTrending,news:()=>pgNews(a),listen:pgListen}[h]||pgArticles)();
@@ -330,16 +390,16 @@ $('.logo').onclick=e=>{e.preventDefault();location.hash='#/';route()};
 const KIND={news:'News',blog:'Blog',podcast:'Podcast',video:'Video',wiki:'Wiki',social:'Social'};
 const safe=x=>/^https?:\/\//i.test(x||'')?x:'#';
 const cssu=x=>esc(String(x).replace(/'/g,'%27').replace(/[()]/g,c=>c==='('?'%28':'%29'));
-const ago=s=>{const d=(Date.now()/1e3-s)/86400;return d<1?'today':d<2?'yesterday':d<30?Math.floor(d)+' days ago':new Date(s*1e3).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+const ago=s=>{const d=(Date.now()/1e3-s)/86400;return d<1?'today':d<2?'yesterday':d<30?Math.floor(d)+' days ago':dfmt(new Date(s*1e3),1)};
 const SAMPLE=()=>{const n=Date.now()/1e3;return[['news','Anime News Network','Sample: a new season trailer lands','https://www.animenewsnetwork.com/',''],['news','MyAnimeList News','Sample: staff and cast announced','https://myanimelist.net/news',''],['blog','The Glorio Blog','Sample: first impressions of the new season','https://theglorioblog.com/',''],['podcast','The GLORIO Chat Podcast','Sample: this week on the podcast','https://theglorioblog.com/',''],['video','Sample YouTube channel','Sample: a theory discussion video','https://www.youtube.com/watch?v=jNQXAC9IVRw','jNQXAC9IVRw'],['news','Crunchyroll News','Sample: simulcast schedule update','https://www.crunchyroll.com/news','']].map((x,i)=>({id:'s'+i,kind:x[0],source:'s',sourceName:x[1],title:x[2],excerpt:'Sample excerpt. With the backend running, real items from the original sources appear here.',link:x[3],image:'',audio:x[0]==='podcast'?'https://example.com/sample-episode.mp3':'',video:x[4],published:n-3600*(i+1),anime:[]}))};
 /* videos play in YouTube's own player (click to load), podcasts play from the show's own audio file: nothing is copied or re-hosted */
 const vid=x=>/^[\w-]{11}$/.test(x||'')?x:'';
-const vp=n=>`<div class="vp" role="button" tabindex="0" aria-label="Play video" data-v="${vid(n.video)}" style="background-image:url('${cssu(safe(n.image)!=='#'?n.image:'https://i.ytimg.com/vi/'+vid(n.video)+'/hqdefault.jpg')}')"></div>`;
+const vp=n=>`<div class="vp" role="button" tabindex="0" aria-label="Play video" data-v="${vid(n.video)}" data-bg="${esc(safe(n.image)!=='#'?n.image:'https://i.ytimg.com/vi/'+vid(n.video)+'/hqdefault.jpg')}"></div>`;
 const play=b=>{if(!b||b.dataset.on||!vid(b.dataset.v))return;b.dataset.on=1;b.classList.add('on');b.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${b.dataset.v}?autoplay=1&rel=0" title="Video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>`};
 document.addEventListener('click',e=>play(e.target.closest('.vp')));
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('vp')){e.preventDefault();play(e.target)}});
 const VERB=n=>vid(n.video)||n.kind==='video'?'Watch':safe(n.audio)!=='#'||n.kind==='podcast'?'Listen':'Read';
-const ncard=n=>`<div class="card nc">${vid(n.video)?vp(n):safe(n.image)!=='#'?`<i class="ci" style="background-image:url('${cssu(n.image)}')"></i>`:n.anime&&n.anime[0]?`<i class="ci" data-an="${n.anime[0]}"></i>`:''}<span class="tag">${KIND[n.kind]||'News'}</span><span class="tag">${esc(n.sourceName)}</span><h3><a href="#/news/${esc(n.id)}">${esc(n.title)}</a></h3>${n.excerpt?`<p class="meta">${esc(n.excerpt)}</p>`:''}${safe(n.audio)!=='#'?`<audio controls preload="none" src="${esc(n.audio)}" style="width:100%;margin-top:8px"></audio>`:''}<p class="meta">${ago(n.published)} · <a href="${esc(safe(n.link))}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${VERB(n)} on ${esc(n.sourceName)} ↗</a></p></div>`;
+const ncard=n=>`<div class="card nc">${vid(n.video)?vp(n):safe(n.image)!=='#'?`<i class="ci" data-bg="${esc(n.image)}"></i>`:n.anime&&n.anime[0]?`<i class="ci" data-an="${n.anime[0]}"></i>`:''}<span class="tag">${KIND[n.kind]||'News'}</span><span class="tag">${esc(n.sourceName)}</span><h3><a href="#/news/${esc(n.id)}">${esc(n.title)}</a></h3>${n.excerpt?`<p class="meta">${esc(n.excerpt)}</p>`:''}${safe(n.audio)!=='#'?`<audio controls preload="none" src="${esc(n.audio)}" style="width:100%;margin-top:8px"></audio>`:''}<p class="meta">${ago(n.published)} · <a href="${esc(safe(n.link))}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${VERB(n)} on ${esc(n.sourceName)} ↗</a></p></div>`;
 /* a page on your site for each item: preview, player, and the source link below */
 async function pgNews(id){
   wait();
@@ -347,7 +407,7 @@ async function pgNews(id){
     const n=await api('/news/item/'+encodeURIComponent(id)),verb=VERB(n);
     const media=vid(n.video)?vp(n):safe(n.audio)!=='#'?`<audio controls preload="none" src="${esc(n.audio)}" style="width:100%;margin:14px 0"></audio>`:'';
     const img=!media&&safe(n.image)!=='#'?`<div class="banner" style="background:url('${cssu(n.image)}') center/cover"></div>`:'';
-    const day=new Date(n.published*1e3).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const day=dfmt(new Date(n.published*1e3),1);
     const why=verb==='Read'?'This is a short preview. The full story belongs to':verb==='Watch'?'This video plays here, but it is hosted by':'This episode plays here, but it is hosted by';
     V.innerHTML=`<div class="read">${img}<div style="margin-top:26px"><span class="tag">${KIND[n.kind]||'News'}</span><span class="tag">${esc(n.sourceName)}</span></div><h1 style="font-size:30px;line-height:1.2;margin:12px 0 6px;letter-spacing:-.02em">${esc(n.title)}</h1><p class="meta">${day} · via ${esc(n.sourceName)}</p>${media}${n.excerpt?`<p>${esc(n.excerpt)}</p>`:''}<div class="card srcbox"><b>Source</b><p class="meta">${why} ${esc(n.sourceName)}. Use the link to check it at the original.</p><p><a href="${esc(safe(n.link))}" target="_blank" rel="noopener noreferrer">${verb} on ${esc(n.sourceName)} ↗</a></p></div>${n.more&&n.more.length?`<h2>More from ${esc(n.sourceName)}</h2><div class="cards">${n.more.map(ncard).join('')}</div>`:''}</div>`;
   }catch(e){oops('Could not find this item.')}
@@ -398,8 +458,8 @@ const ART=new Map();let ft;
 async function fillArt(){
   const el=[...document.querySelectorAll('.ci[data-an]')],need=[...new Set(el.map(e=>e.dataset.an))].filter(i=>!ART.has(i));
   if(need.length)try{(await api('/art?ids='+need.join(','))).forEach(a=>ART.set(String(a.id),a.best));need.forEach(i=>ART.has(i)||ART.set(i,null))}catch(e){}
-  el.forEach(e=>{const u=ART.get(e.dataset.an);if(u){e.style.backgroundImage=`url(${u})`;e.removeAttribute('data-an')}else e.remove()})}
-new MutationObserver(()=>{clearTimeout(ft);ft=setTimeout(fillArt,60)}).observe(document.body,{childList:true,subtree:true});
+  el.forEach(e=>{const u=ART.get(e.dataset.an);if(u){e.dataset.bg=u;e.removeAttribute('data-an')}else e.remove()});lazyBg()}
+new MutationObserver(()=>{clearTimeout(ft);ft=setTimeout(()=>{fillArt();lazyBg()},60)}).observe($('main'),{childList:true,subtree:true});
 /* auto-update: while the home page is open, news and video rows refresh every ~2 minutes, the anime rows every 10 */
 let stamp=Date.now(),nstamp=Date.now();
 const homeNews=()=>{newsInto('#hn','',6,0,0);newsInto('#hw','type=video,podcast',3,2,0)};
